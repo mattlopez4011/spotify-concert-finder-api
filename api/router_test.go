@@ -5,18 +5,17 @@ import (
 	"testing"
 )
 
-func  Test_newRouter(t *testing.T) {
+func Test_newRouter(t *testing.T) {
 
 	t.Run("Test router", func(t *testing.T) {
-			z, _ := zap.NewDevelopment()
+		z, _ := zap.NewDevelopment()
 
 		a := &api{
-			Log: z.Sugar(),
+			Log:     z.Sugar(),
 			Spotify: SpotifyClient{},
 		}
 
 		newRouter(a)
-
 
 	})
 

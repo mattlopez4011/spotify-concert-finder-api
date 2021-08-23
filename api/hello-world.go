@@ -6,12 +6,12 @@ import (
 )
 
 type RequestBody struct {
-	User User `json:"user"`
+	User  User   `json:"user"`
 	Notes string `json:"notes"`
 }
 
 type User struct {
-	UserID string `json:"user_id"`
+	UserID    string `json:"user_id"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
 }

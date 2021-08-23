@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/pkg/browser"
 	"github.com/zmb3/spotify"
 	"spotify-concert-finder-api/models"
 )
@@ -47,7 +46,10 @@ func (a *api) startSpotifyAuthentication(w http.ResponseWriter, r *http.Request)
 
 	//Need to send this url to front end
 	//Front end will need to redirect user to provided url
-	browser.OpenURL(url)
+	//err := browser.OpenURL(url)
+	//if err != nil {
+	//	a.Log.Errorw("Error opening browser")
+	//}
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Println()
@@ -71,10 +73,16 @@ func (a *api) spotifyAuthenticationSuccessful(w http.ResponseWriter, r *http.Req
 	a.Log.Infof("State before token is requested: %+v", a.Spotify.state)
 
 	token, err := a.Spotify.authenticator.Token(a.Spotify.state, r)
+	if err != nil {
+		a.Log.Errorw("Error requesting access token", "error", err.Error())
+
+		w.WriteHeader(http.StatusInternalServerError)
+		_, _ = w.Write([]byte(err.Error()))
+		return
+	}
 	a.Log.Infof("Token: %+v", token)
 	a.Log.Infof("token.AccessToken: %+v", token.AccessToken)
 	a.Log.Infof("token.RefreshToken: %+v", token.RefreshToken)
-
 
 	client := a.Spotify.authenticator.NewClient(token)
 

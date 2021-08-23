@@ -61,7 +61,7 @@ func newProductionApi() (*api, error) {
 	//client := spotify.Authenticator{}.NewClient(token)
 
 	spotifyModel := SpotifyClient{
-		client:        client,
+		client: client,
 		//client:        spotify.Client{},
 		authenticator: spotify.Authenticator{},
 		clientID:      os.Getenv("SPOTIFY_ID"),
