@@ -6,15 +6,15 @@ on:
 
 jobs:
   golangci:
-    name: Golang lint
+    name: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v1
+        uses: golangci/golangci-lint-action@v2
         with:
           # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
-          version: v1.29
+          version: v1.35
 
           # Optional: working directory, useful for monorepos
           # working-directory: somedir
