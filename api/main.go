@@ -33,9 +33,11 @@ package main
 import (
 	"context"
 	"fmt"
-	spotifyauth "github.com/zmb3/spotify/v2/auth"
 	"log"
+	"math/rand"
 	"net/http"
+
+	spotifyauth "github.com/zmb3/spotify/v2/auth"
 
 	"golang.org/x/oauth2"
 
@@ -50,12 +52,12 @@ const redirectURI = "http://localhost:8080/callback"
 var (
 	auth  = spotifyauth.New(spotifyauth.WithRedirectURL(redirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate))
 	ch    = make(chan *spotify.Client)
-	state = "abc123"
+	state = RandomString(3)
 	// These should be randomly generated for each request
 	//  More information on generating these can be found here,
 	// https://www.oauth.com/playground/authorization-code-with-pkce.html
-	codeVerifier  = "w0HfYrKnG8AihqYHA9_XUPTIcqEXQvCQfOF2IitRgmlF43YWJ8dy2b49ZUwVUOR.YnvzVoTBL57BwIhM4ouSa~tdf0eE_OmiMC_ESCcVOe7maSLIk9IOdBhRstAxjCl7"
-	codeChallenge = "ZhZJzPQXYBMjH8FlGAdYK5AndohLzFfZT-8J7biT7ig"
+	codeVerifier  = RandomString(30)
+	codeChallenge = RandomString(20)
 )
 
 func main() {
@@ -77,6 +79,7 @@ func main() {
 
 	// use the client to make calls that require authorization
 	user, err := client.CurrentUser(context.Background())
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -98,5 +101,16 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 	client := spotify.New(auth.Client(r.Context(), tok))
 	fmt.Fprintf(w, "Login Completed!")
 	ch <- client
+}
+
+func RandomString(n int) string {
+	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+
+	s := make([]rune, n)
+	for i := range s {
+		s[i] = letters[rand.Intn(len(letters))]
+	}
+
+	return string(s)
 }
 
