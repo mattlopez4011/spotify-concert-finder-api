@@ -1,8 +1,9 @@
 package main
 
 import (
-	"go.uber.org/zap"
 	"testing"
+
+	"go.uber.org/zap"
 )
 
 func Test_newRouter(t *testing.T) {
