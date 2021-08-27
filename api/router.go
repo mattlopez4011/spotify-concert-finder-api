@@ -21,9 +21,9 @@ func newRouter(a *api) {
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusNotFound) })
 	r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusMethodNotAllowed) })
 
-	r.Get("/artist/{artist_id}", a.getArtist)
-	r.Get("/login-spotify", a.startSpotifyAuthentication)
-	r.Get("/login-spotify/successful", a.spotifyAuthenticationSuccessful)
+// 	r.Get("/artist/{artist_id}", a.getArtist)
+// 	r.Get("/login-spotify", a.startSpotifyAuthentication)
+// 	r.Get("/login-spotify/successful", a.spotifyAuthenticationSuccessful)
 
 	//Test Endpoint
 	r.Get("/hello-world", a.helloWorld)
