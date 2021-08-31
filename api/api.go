@@ -1,15 +1,21 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	"log"
+	"os"
 
 	_ "github.com/lib/pq"
 	"github.com/zmb3/spotify"
 	"go.uber.org/zap"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/clientcredentials"
 )
 
 type api struct {
 	Log     *zap.SugaredLogger
-// 	Spotify SpotifyClient
+	Spotify SpotifyClient
 }
 
 type SpotifyClient struct {
@@ -30,51 +36,51 @@ func newProductionApi() (*api, error) {
 	z, _ := zap.NewProduction()
 
 	// Spotify
-	//config := &clientcredentials.Config{
-	//	ClientID:     os.Getenv("SPOTIFY_ID"),
-	//	ClientSecret: os.Getenv("SPOTIFY_SECRET"),
-	//	TokenURL:     spotify.TokenURL,
-	//}
-	//token, err := config.Token(context.Background())
-	//if err != nil {
-	//	log.Fatalf("couldn't get token: %v", err)
-	//}
-	//
-	//token := &oauth2.Token{
-	//			AccessToken:  "BQDaSac-zFzd_uH75D8DiiXUwSrTnvGqCfrZeeIKu09y-9M7vNzIiEKahkM3PBhtwIbyOkwor8sSlhyXAhcKdulrIA9Hv6ndujtmCt2dZY8miiORW1yhAfKajf3TT00pOzup99pzwTqlZ7D-BQNMcygERmR_mbvbjfAeJiUopbsinPlvzqpn6CbNmNQ07XGP_vOeQEHHssf-8Y0R10LAOEw6DiZuFCxt1wcol5S-3YLKcJ-2KZuoyA9HJFfn6w",
-	//}
-// 	tokenFromDB := "BQDaSac-zFzd_uH75D8DiiXUwSrTnvGqCfrZeeIKu09y-9M7vNzIiEKahkM3PBhtwIbyOkwor8sSlhyXAhcKdulrIA9Hv6ndujtmCt2dZY8miiORW1yhAfKajf3TT00pOzup99pzwTqlZ7D-BQNMcygERmR_mbvbjfAeJiUopbsinPlvzqpn6CbNmNQ07XGP_vOeQEHHssf-8Y0R10LAOEw6DiZuFCxt1wcol5S-3YLKcJ-2KZuoyA9HJFfn6w"
-//
-// 	token := new(oauth2.Token)
-//
-// 	err := json.Unmarshal([]byte(tokenFromDB), token)
-// 	if err != nil {
-// 		fmt.Println("error unmarshalling token from DB ", err.Error())
-// 	}
+	config := &clientcredentials.Config{
+		ClientID:     os.Getenv("SPOTIFY_ID"),
+		ClientSecret: os.Getenv("SPOTIFY_SECRET"),
+		TokenURL:     spotify.TokenURL,
+	}
+	token, err := config.Token(context.Background())
+	if err != nil {
+		log.Fatalf("couldn't get token: %v", err)
+	}
+	
+	token := &oauth2.Token{
+				AccessToken:  "BQDaSac-zFzd_uH75D8DiiXUwSrTnvGqCfrZeeIKu09y-9M7vNzIiEKahkM3PBhtwIbyOkwor8sSlhyXAhcKdulrIA9Hv6ndujtmCt2dZY8miiORW1yhAfKajf3TT00pOzup99pzwTqlZ7D-BQNMcygERmR_mbvbjfAeJiUopbsinPlvzqpn6CbNmNQ07XGP_vOeQEHHssf-8Y0R10LAOEw6DiZuFCxt1wcol5S-3YLKcJ-2KZuoyA9HJFfn6w",
+	}
+	tokenFromDB := "BQDaSac-zFzd_uH75D8DiiXUwSrTnvGqCfrZeeIKu09y-9M7vNzIiEKahkM3PBhtwIbyOkwor8sSlhyXAhcKdulrIA9Hv6ndujtmCt2dZY8miiORW1yhAfKajf3TT00pOzup99pzwTqlZ7D-BQNMcygERmR_mbvbjfAeJiUopbsinPlvzqpn6CbNmNQ07XGP_vOeQEHHssf-8Y0R10LAOEw6DiZuFCxt1wcol5S-3YLKcJ-2KZuoyA9HJFfn6w"
 
-// 	client := spotify.NewAuthenticator("").NewClient(token)
+	token := new(oauth2.Token)
 
-	//client := spotify.Authenticator{}.NewClient(token)
+	err := json.Unmarshal([]byte(tokenFromDB), token)
+	if err != nil {
+		fmt.Println("error unmarshalling token from DB ", err.Error())
+	}
 
-// 	spotifyModel := SpotifyClient{
-// 		client: client,
-// 		//client:        spotify.Client{},
-// 		authenticator: spotify.Authenticator{},
-// 		clientID:      os.Getenv("SPOTIFY_ID"),
-// 		clientSecret:  os.Getenv("SPOTIFY_SECRET"),
-// 		state:         "",
-// 		codeVerifier:  "",
-// 		codeChallenge: "",
-// 		errors:        nil,
-// 		results:       nil,
-// 		currentUserID: "",
-// 	}
-//
-// 	spotifyModel.authenticator.SetAuthInfo(os.Getenv("SPOTIFY_ID"), os.Getenv("SPOTIFY_SECRET"))
+	client := spotify.NewAuthenticator("").NewClient(token)
+
+	client := spotify.Authenticator{}.NewClient(token)
+
+	spotifyModel := SpotifyClient{
+		client: client,
+		client:        spotify.Client{},
+		authenticator: spotify.Authenticator{},
+		clientID:      os.Getenv("SPOTIFY_ID"),
+		clientSecret:  os.Getenv("SPOTIFY_SECRET"),
+		state:         "",
+		codeVerifier:  "",
+		codeChallenge: "",
+		errors:        nil,
+		results:       nil,
+		currentUserID: "",
+	}
+
+	spotifyModel.authenticator.SetAuthInfo(os.Getenv("SPOTIFY_ID"), os.Getenv("SPOTIFY_SECRET"))
 
 	a := &api{
 		Log:     z.Sugar(),
-// 		Spotify: spotifyModel,
+		Spotify: spotifyModel,
 	}
 
 	return a, nil
