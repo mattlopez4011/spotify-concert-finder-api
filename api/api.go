@@ -1,35 +1,35 @@
 package main
 
-import (
-	"context"
-	"fmt"
-	"log"
-	"os"
+// import (
+// 	"context"
+// 	"fmt"
+// 	"log"
+// 	"os"
 
-	_ "github.com/lib/pq"
-	"github.com/zmb3/spotify"
-	"go.uber.org/zap"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/clientcredentials"
-)
+// 	_ "github.com/lib/pq"
+// 	"github.com/zmb3/spotify"
+// 	"go.uber.org/zap"
+// 	"golang.org/x/oauth2"
+// 	"golang.org/x/oauth2/clientcredentials"
+// )
 
 type api struct {
-	Log     *zap.SugaredLogger
-	Spotify SpotifyClient
+	// Log     *zap.SugaredLogger
+	// Spotify SpotifyClient
 }
 
-type SpotifyClient struct {
-	client        spotify.Client
-	authenticator spotify.Authenticator
-	clientID      string
-	clientSecret  string
-	state         string
-	codeVerifier  string
-	codeChallenge string
-	errors        chan error
-	results       chan string
-	currentUserID string
-}
+// type SpotifyClient struct {
+// 	client        spotify.Client
+// 	authenticator spotify.Authenticator
+// 	clientID      string
+// 	clientSecret  string
+// 	state         string
+// 	codeVerifier  string
+// 	codeChallenge string
+// 	errors        chan error
+// 	results       chan string
+// 	currentUserID string
+// }
 
 func newProductionApi() (*api, error) {
 	// zap for logging

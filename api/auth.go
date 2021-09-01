@@ -12,7 +12,7 @@ import (
 
 // const redirectURI = "http://192.168.2.4:3000/login-spotify/successful"
 
-const redirectURI = "http://localhost:3000/login-spotify/successful"
+// const redirectURI = "http://localhost:3000/login-spotify/successful"
 
 // redirectURI = "http://127.0.0.1:8080/callback"
 
