@@ -162,8 +162,6 @@ var (
 )
 
 func main() {
-	os.Setenv("SPOTIFY_ID", "1ea7b85e0d5644e1bf288a172bb5445f")
-	os.Setenv("SPOTIFY_SECRET", "256e00f442cd4f13a22b208a12d30506")
 	// first start an HTTP server
 	http.HandleFunc("/callback", completeAuth)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
