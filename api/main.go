@@ -122,21 +122,17 @@ package main
 // 	return r
 // }
 
-
 //IF YOU WANT THIS TO WORK
 // 1) Register an app on spotify
 // 2) Insert your client id and secret in the var auth
 // 3) Run go run main.go
 // 4) Paste url from terminal in your browser
 
-
-
 import (
 	"context"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	spotifyauth "github.com/zmb3/spotify/v2/auth"
 
@@ -151,7 +147,7 @@ import (
 const redirectURI = "http://localhost:8080/callback"
 
 var (
-	auth  = spotifyauth.New(spotifyauth.WithRedirectURL(redirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate), spotifyauth.WithClientID("INSERT YOUR CLIENT ID HERE"), spotifyauth.WithClientSecret("INSERT YOUR SECRET HERE"))
+	auth  = spotifyauth.New(spotifyauth.WithRedirectURL(redirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate, spotifyauth.ScopeUserFollowRead), spotifyauth.WithClientID("1ea7b85e0d5644e1bf288a172bb5445f"), spotifyauth.WithClientSecret("256e00f442cd4f13a22b208a12d30506"))
 	ch    = make(chan *spotify.Client)
 	state = "abc123"
 	// These should be randomly generated for each request
@@ -173,6 +169,7 @@ func main() {
 		oauth2.SetAuthURLParam("code_challenge_method", "S256"),
 		oauth2.SetAuthURLParam("code_challenge", codeChallenge),
 	)
+
 	fmt.Println("Please log in to Spotify by visiting the following page in your browser:", url)
 
 	// wait for auth to complete
@@ -184,6 +181,20 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println("You are logged in as:", user.ID)
+
+	// userProfile, _ := client.GetUsersPublicProfile(context.Background(), spotify.ID(user.ID))
+	// client.CurrentUsersFollowedArtists(context.Background(), )
+	// if err != nil {
+	// 	// fmt.Fprintln(os.Stderr, err.Error())
+	// 	return
+	// }
+
+	fmt.Println("User ID:", user.ID)
+	fmt.Println("Display name:", user.DisplayName)
+	fmt.Println("Spotify URI:", string(user.URI))
+	fmt.Println("Endpoint:", user.Endpoint)
+	fmt.Println("Followers:", user.Followers.Count)
+
 }
 
 func completeAuth(w http.ResponseWriter, r *http.Request) {
@@ -199,8 +210,10 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 	}
 	// use the token to get an authenticated client
 	client := spotify.New(auth.Client(r.Context(), tok))
+
 	fmt.Fprintf(w, "Login Completed!")
 	ch <- client
 }
+
 //https://accounts.spotify.com/authorize?client_id=1ea7b85e0d5644e1bf288a172bb5445f&code_challenge=ZhZJzPQXYBMjH8FlGAdYK5AndohLzFfZT-8J7biT7ig&code_challenge_method=S256&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fcallback&response_type=code&scope=user-read-private&state=abc123
 // https://accounts.spotify.com/authorize?client_id=1ea7b85e0d5644e1bf288a172bb5445f&code_challenge=ZhZJzPQXYBMjH8FlGAdYK5AndohLzFfZT-8J7biT7ig&code_challenge_method=S256&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fcallback&response_type=code&scope=user-read-private&state=abc123
