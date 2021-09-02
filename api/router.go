@@ -5,52 +5,18 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 )
 
-// func newRouter(a *api) *chi.Mux {
-// 	if a == nil {
-// 		api, err := newProductionApi()
-// 		if err != nil {
-// 			panic(err.Error())
-// 		}
+func newDevRouter() *chi.Mux {
+	r := chi.NewRouter()
+	r.Use(middleware.Logger) 
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Got request for:", r.URL.String())
+	})
+	r.Get("/callback", completeAuth)
 
-// 		a = api
-// 	}
-
-// 	r := chi.NewRouter()
-
-// 	r.NotFound(func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusNotFound) })
-// 	r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusMethodNotAllowed) })
-
-// 	// r.Get("/artist/{artist_id}", a.getArtist)
-// 	// r.Get("/login-spotify", a.startSpotifyAuthentication)
-// 	// r.Get("/login-spotify/successful", a.spotifyAuthenticationSuccessful)
-
-// 	//Test Endpoint
-// 	r.Get("/hello-world", a.helloWorld)
-
-// 	err := http.ListenAndServe(":3000", r)
-// 	if err != nil {
-// 		// a.Log.Errorw("Error serving request", "error", err.Error())
-// 	}
-
-// 	return r
-// }
-
-// func newDevRouter() *chi.Mux {
-// 	r := chi.NewRouter()
-
-// 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-// 		log.Println("Got request for:", r.URL.String())
-// 	})
-// 	r.Get("/callback", completeAuth)
-
-// 	err := http.ListenAndServe(":8080", r)
-// 	if err != nil {
-// 		// a.Log.Errorw("Error serving request", "error", err.Error())
-// 	}
-
-// 	return r
-// }
+	return r
+}
 
 
