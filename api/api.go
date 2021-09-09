@@ -15,3 +15,9 @@ func newApplication() (*api, error) {
 
 	return a, nil
 }
+
+func newLogger() (*zap.SugaredLogger) {
+	z, _ := zap.NewDevelopment()
+
+	return z.Sugar()
+}

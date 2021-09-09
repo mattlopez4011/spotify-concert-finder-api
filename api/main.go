@@ -9,7 +9,6 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/zmb3/spotify/v2"
 	spotifyauth "github.com/zmb3/spotify/v2/auth"
-	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 )
 
@@ -30,16 +29,14 @@ var (
 )
 
 func main() {
-	z, _ := zap.NewProduction()
-	zLog := z.Sugar()
+	zLogger := newLogger()
 	r := chi.NewRouter()
-	r.Use(middleware.Logger) 
+	r.Use(middleware.Logger)
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("Got request for:", r.URL.String())
-		zLog.Info("Hello from z logger")
+		zLogger.Info("Hello from z logger")
 	})
 	err := http.ListenAndServe(":8080", r)
-
 
 	if err != nil {
 		// a.Log.Errorw("Error serving request", "error", err.Error())
@@ -52,7 +49,7 @@ func main() {
 	)
 
 	log.Println("Please log in to Spotify by visiting the following page in your browser:", url)
-	
+
 	// wait for auth to complete
 	client := <-ch
 
