@@ -5,8 +5,11 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/zmb3/spotify/v2"
 	spotifyauth "github.com/zmb3/spotify/v2/auth"
+	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 )
 
@@ -27,8 +30,17 @@ var (
 )
 
 func main() {
-	r := newDevRouter()
+	z, _ := zap.NewProduction()
+	zLog := z.Sugar()
+	r := chi.NewRouter()
+	r.Use(middleware.Logger) 
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Got request for:", r.URL.String())
+		zLog.Info("Hello from z logger")
+	})
 	err := http.ListenAndServe(":8080", r)
+
+
 	if err != nil {
 		// a.Log.Errorw("Error serving request", "error", err.Error())
 		log.Println(err.Error())
