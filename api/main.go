@@ -16,7 +16,6 @@ func main() {
 
 	http.ListenAndServe(":8080", r)
 	
-
 	client := <-ch
 
 	// use the client to make calls that require authorization

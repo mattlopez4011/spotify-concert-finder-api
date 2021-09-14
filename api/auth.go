@@ -53,3 +53,9 @@ func createAuthUrl() string {
 	return url
 }
 
+func (a *api) login(w http.ResponseWriter, r *http.Request) {
+	url := createAuthUrl()
+	// wait for auth to complete
+	http.Redirect(w, r, url, http.StatusSeeOther)
+}
+

@@ -8,7 +8,7 @@ import (
 func (a *api) newRouter() *chi.Mux {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger) 
-	r.Get("/", a.login)
+	r.Get("/login", a.login)
 	r.Get("/callback", completeAuth)
 
 	return r
