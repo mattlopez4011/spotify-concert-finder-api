@@ -12,7 +12,6 @@ func Test_newRouter(t *testing.T) {
 
 		a := &api{
 			Log:     z.Sugar(),
-			Spotify: SpotifyClient{},
 		}
 
 		newRouter(a)
