@@ -1,12 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 
-	spotifyauth "github.com/zmb3/spotify/v2/auth"
 	"github.com/zmb3/spotify/v2"
+	spotifyauth "github.com/zmb3/spotify/v2/auth"
 	"golang.org/x/oauth2"
 )
 
@@ -41,7 +42,13 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 	client := spotify.New(auth.Client(r.Context(), tok))
 
 	fmt.Fprintf(w, "Login Completed!")
-	ch <- client
+	
+	// use the client to make calls that require authorization
+	user, err := client.CurrentUser(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("You are logged in as:", user.ID)
 }
 
 func createAuthUrl() string {
@@ -58,4 +65,3 @@ func (a *api) login(w http.ResponseWriter, r *http.Request) {
 	// wait for auth to complete
 	http.Redirect(w, r, url, http.StatusSeeOther)
 }
-

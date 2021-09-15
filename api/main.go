@@ -18,6 +18,8 @@ func main() {
 	
 	client := <-ch
 
+
+
 	// use the client to make calls that require authorization
 	user, err := client.CurrentUser(context.Background())
 	if err != nil {
