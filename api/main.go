@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"context"
 )
 
 func main() {
@@ -13,14 +15,20 @@ func main() {
 
 	r := api.newRouter()
 
-	http.ListenAndServe(":8080", r)
+	go http.ListenAndServe(":8080", r)
 
-	// client := <-ch
+	client := <-ch
 
-	// use the client to make calls that require authorization
-	// user, err := client.CurrentUser(context.Background())
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// log.Printf("You are logged in as:", user.ID)
+	//use the client to make calls that require authorization
+	user, err := client.CurrentUser(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("You are logged in as: %s", user.ID)
+
+	userFollowedArtist, err := client.CurrentUsersFollowedArtists(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%s", userFollowedArtist.Artists)
 }

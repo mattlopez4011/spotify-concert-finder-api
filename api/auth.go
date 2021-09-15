@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -17,7 +16,7 @@ import (
 const redirectURI = "http://localhost:8080/callback"
 
 var (
-	auth  = spotifyauth.New(spotifyauth.WithRedirectURL(redirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate, spotifyauth.ScopeUserFollowRead), spotifyauth.WithClientID("1ea7b85e0d5644e1bf288a172bb5445f"), spotifyauth.WithClientSecret("256e00f442cd4f13a22b208a12d30506"))
+	auth  = spotifyauth.New(spotifyauth.WithRedirectURL(redirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate, spotifyauth.ScopeUserFollowRead), spotifyauth.WithClientID("f7b4652e149d4519b23e27e0e06248f5"), spotifyauth.WithClientSecret("b74fedf269d04707a4aaa34f3b34dddd"))
 	ch    = make(chan *spotify.Client)
 	state = "abc123"
 	// These should be randomly generated for each request
@@ -53,14 +52,15 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 	}
 	// use the token to get an authenticated client
 	client := spotify.New(auth.Client(r.Context(), tok))
-	
 	fmt.Fprintf(w, "Login Completed!")
+	ch <- client
+
 	// use the client to make calls that require authorization
-	user, err := client.CurrentUser(context.Background())
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("You are logged in as:", user.ID)
+	//user, err := client.CurrentUser(context.Background())
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//log.Printf("You are logged in as:", user.ID)
 	// use the client to make calls that require authorization
 }
 
@@ -69,7 +69,7 @@ func createAuthUrl() string {
 		oauth2.SetAuthURLParam("code_challenge_method", "S256"),
 		oauth2.SetAuthURLParam("code_challenge", codeChallenge),
 	)
-
+	fmt.Println("Please log in to Spotify by visiting the following page in your browser:", url)
 	return url
 }
 
