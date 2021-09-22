@@ -1,26 +1,41 @@
 package main
 
 import (
-	"go.uber.org/zap"
+	"flag"
 	"log"
+	"os"
+
+	"go.uber.org/zap"
 )
+
+const version = "1.0.0"
 
 type config struct {
 	port int
 	env  string
-	db struct {
-		dsn string
-	}
+}
+
+type AppStatus struct {
+	Status      string `json:"status"`
+	Environment string `json:"environment"`
+	Version     string `json:"version"`
 }
 
 type api struct {
-	zLogger *zap.SugaredLogger;
+	config config
+	zLogger *zap.SugaredLogger
 }
 
-func newApplication() (*api, error) {
+func newApi() (*api, error) {
+	var cfg config
+	flag.IntVar(&cfg.port, "port", 8080, "Server port to listen on")
+	flag.StringVar(&cfg.env, "env", "development", "Application environment (development | production ")
+	flag.Parse()
+	
 	zLog := newLogger()
 	
 	a := &api {
+		config: cfg,
 		zLogger: zLog,
 	}
 

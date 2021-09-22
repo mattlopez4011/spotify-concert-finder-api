@@ -16,7 +16,7 @@ import (
 const redirectURI = "http://localhost:8080/callback"
 
 var (
-	auth  = spotifyauth.New(spotifyauth.WithRedirectURL(redirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate, spotifyauth.ScopeUserFollowRead), spotifyauth.WithClientID("f7b4652e149d4519b23e27e0e06248f5"), spotifyauth.WithClientSecret("b74fedf269d04707a4aaa34f3b34dddd"))
+	auth  = spotifyauth.New(spotifyauth.WithRedirectURL(redirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate, spotifyauth.ScopeUserFollowRead), spotifyauth.WithClientID("1ea7b85e0d5644e1bf288a172bb5445f"), spotifyauth.WithClientSecret("256e00f442cd4f13a22b208a12d30506"))
 	ch    = make(chan *spotify.Client)
 	state = "abc123"
 	// These should be randomly generated for each request
@@ -39,7 +39,7 @@ type SpotifyClient struct {
 	currentUserID string
 }
 
-func completeAuth(w http.ResponseWriter, r *http.Request) {
+func (a *api) completeAuth(w http.ResponseWriter, r *http.Request) {
 	tok, err := auth.Token(r.Context(), state, r,
 		oauth2.SetAuthURLParam("code_verifier", codeVerifier))
 	if err != nil {

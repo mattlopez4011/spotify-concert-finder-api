@@ -7,12 +7,16 @@ import (
 	"net/http"
 )
 
+
+
+
 func main() {
-	api, err := newApplication()
+	api, err := newApi()
 	if err != nil {
 		log.Println(err.Error())
 	}
 
+	
 	r := api.newRouter()
 
 	go http.ListenAndServe(":8080", r)
